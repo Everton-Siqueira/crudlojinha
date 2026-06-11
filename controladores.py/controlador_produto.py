@@ -1,10 +1,10 @@
 from fastapi import APIRouter
-from cliente import Cliente
+from produto import Produto
 
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
-router = APIRouter(prefix="/cliente", tags=["Clientes"])
+router = APIRouter(prefix="/produto", tags=["Produtos"])
 
 
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
@@ -14,7 +14,7 @@ DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 #REST
 #Create
 @router.post('/')
-def cadastrar(cliente: Cliente): #observe o tipo que é meu model
+def cadastrar(produto:Produto):
 
     #crio a conexao
     engine = create_engine(DATABASE_URL)
@@ -22,13 +22,13 @@ def cadastrar(cliente: Cliente): #observe o tipo que é meu model
 
     try:
         with engine.begin() as con: #inicializo a transação
-            sql = """INSERT INTO public.clientes
+            sql = """INSERT INTO public.produto
                                 (nome_cliente, email, cidade)
                         VALUES ( :nomezinho, :email, :cidade)"""            
             dados = {
-                "nomezinho" : cliente.nome, #cliente . propriedade
-                "email": cliente.email,
-                "cidade": cliente.cidade
+                "nomezinho" : produto.nome, #cliente . propriedade
+                ""
+                
             }
 
 
