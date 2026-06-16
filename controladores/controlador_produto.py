@@ -22,21 +22,28 @@ def cadastrar(produto:Produto):
 
     try:
         with engine.begin() as con: #inicializo a transação
-            sql = """INSERT INTO public.produto
-                                (nome_cliente, email, cidade)
-                        VALUES ( :nomezinho, :email, :cidade)"""            
+            sql = """INSERT INTO public.produtos
+                         (nome_produto, preco, estoque, marca_id)
+	                    VALUES (:nome, :preco, :estoque, :marca_id)""";                   
+            
             dados = {
-                "nomezinho" : produto.nome, #cliente . propriedade
-                ""
+                "nome" : produto.nome,
+                "preco" : produto.preco,
+                "estoque" : produto.estoque,
+                "marca_id" : produto.marca_id
                 
             }
 
+          
 
             con.execute(text(sql), dados)
+
+            return {"mensagem": "Produto cadastrado com sucesso"}
+
     except Exception as e:
         print(e)
     engine.dispose()
-
+        
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
 @router.get('/{id}')
@@ -47,15 +54,15 @@ def getOne(id: int ):
     try:
         with engine.begin() as con:
             sql = """
-                SELECT id, nome_cliente, email, cidade
-                FROM public.clientes
+                SELECT id, nome_produto, preco, estoque, marca_id
+	            FROM public.produtos
                 WHERE id = :id
             """
 
             result = con.execute(text(sql), {"id": id}).fetchone()
 
             if result is None:
-                return {"erro": "Cliente não encontrado"}
+                return {"erro": "Produto não encontrado"}
 
             return dict(result._mapping)
 
@@ -73,8 +80,8 @@ def todos():
         with engine.begin() as con:
 
             sql = """
-                SELECT id, nome_cliente, email, cidade
-                FROM public.clientes
+                SELECT id, nome_produto, preco, estoque, marca_id
+	            FROM public.produtos
                 ORDER BY id
             """
 
@@ -90,7 +97,7 @@ def todos():
 
 
 @router.put('/{id}')
-def atualizar(id: int, cliente: Cliente):
+def atualizar(id: int, produto: Produto):
 
 
     engine = create_engine(DATABASE_URL)
@@ -99,23 +106,22 @@ def atualizar(id: int, cliente: Cliente):
         with engine.begin() as con:
 
             sql = """
-                UPDATE public.clientes
-                SET nome_cliente = :nome_cliente,
-                    email = :email,
-                    cidade = :cidade
-                WHERE id = :id
+                UPDATE public.produtos
+	            SET nome_produto= :nome_produto, preco= :preco, estoque= :estoque, marca_id= :marca_id
+	            WHERE id = :id
             """
 
             dados = {
                 "id": id,
-                "nome_cliente": cliente.nome,
-                "email": cliente.email,
-                "cidade": cliente.cidade
+                "nome_produto": produto.nome,
+                "preco": produto.preco,
+                "estoque": produto.estoque,
+                "marca_id": produto.marca_id
             }
 
             result = con.execute(text(sql), dados)
 
-            return {"mensagem": "Cliente atualizado com sucesso"}
+            return {"mensagem": "Produto atualizado com sucesso"}
 
     except Exception as e:
         return {"erro": str(e)}
@@ -129,13 +135,14 @@ def deletar(id: int):
     try:
         with engine.begin() as con:
             sql = """
-                DELETE FROM public.clientes
+                DELETE FROM public.produtos 
                 WHERE id = :id
+                
             """
 
             con.execute(text(sql), {"id": id})
 
-        return {"mensagem": "Cliente deletado com sucesso", "id": id}
+        return {"mensagem": "Produto deletado com sucesso", "id": id}
 
     except Exception as e:
         return {"erro": str(e)}
