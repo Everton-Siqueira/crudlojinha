@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr, field_validator
 
 
 #Model
-class Cliente(BaseModel):
+class Clientes(BaseModel):
     nome: str = Field(min_length = 3)
     cidade: str = Field(min_length = 3)#minimo 3 caracteres
     email: EmailStr
