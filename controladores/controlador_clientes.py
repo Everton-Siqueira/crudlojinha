@@ -24,7 +24,7 @@ def cadastrar(cliente: Clientes): #observe o tipo que é meu model
         with engine.begin() as con: #inicializo a transação
             sql = """INSERT INTO public.clientes
                                 (nome_cliente, email, cidade)
-                        VALUES ( :nomezinho, :email, :cidade)"""            
+                        VALUES ( :nome_cliente, :email, :cidade)"""            
             dados = {
                 "nome_cliente" : cliente.nome_cliente, #cliente . propriedade
                 "email": cliente.email,
