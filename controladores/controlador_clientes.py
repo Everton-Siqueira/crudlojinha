@@ -14,7 +14,7 @@ DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 #REST
 #Create
 @router.post('/')
-def cadastrar(clientes: Clientes): #observe o tipo que é meu model
+def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 
     #crio a conexao
     engine = create_engine(DATABASE_URL)
