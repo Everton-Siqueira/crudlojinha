@@ -33,6 +33,7 @@ def cadastrar(clientes: Clientes): #observe o tipo que é meu model
 
 
             con.execute(text(sql), dados)
+            con.commit() #confirma a transação
     except Exception as e:
         print(e)
     engine.dispose()
