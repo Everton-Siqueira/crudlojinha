@@ -26,7 +26,7 @@ def cadastrar(cliente: Clientes): #observe o tipo que é meu model
                                 (nome_cliente, email, cidade)
                         VALUES ( :nomezinho, :email, :cidade)"""            
             dados = {
-                "nome_cliente" : cliente.nome, #cliente . propriedade
+                "nome_cliente" : cliente.nome_cliente, #cliente . propriedade
                 "email": cliente.email,
                 "cidade": cliente.cidade
             }
