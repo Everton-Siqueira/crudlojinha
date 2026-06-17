@@ -35,8 +35,8 @@ def cadastrar(clientes: Clientes): #observe o tipo que é meu model
             con.execute(text(sql), dados)
             con.commit() #confirma a transação
     except Exception as e:
-        print(e)
-    engine.dispose()
+        # Se der erro no banco, agora você verá o motivo real no Postman
+        return {"status": "erro", "detalhe": str(e)}
 
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
