@@ -8,7 +8,7 @@ router = APIRouter(prefix="/itens_compras", tags=["Itens de Compras"])
 
 
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
-DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
+DATABASE_URL = "postgresql://postgres:123@localhost:5432/lojinha"
 
 
 #REST
