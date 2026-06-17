@@ -8,14 +8,14 @@ class Clientes(BaseModel):
     email: EmailStr
 
 
-    @field_validator("nome")
+    @field_validator("nome_cliente")
     def nome_deve_conter_espaco(cls, value: str) -> str:
         value = " ".join(value.strip().split())
 
         if " " not in value:
             raise ValueError("O nome deve conter ao menos um espaço.")
 
-        return Value
+        return value
 
     
     
