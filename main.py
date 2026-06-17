@@ -2,11 +2,11 @@ import uvicorn
 from fastapi import FastAPI
 
 
-from controlador_clientes import router as clientes_router
-from controlador_produto import router as produto_router
-from controlador_marca import router as marca_router
-from controlador_pedidos import router as pedidos_router
-from controlador_itens_compras import router as itens_compras
+from controladores.controlador_clientes import router as clientes_router
+from controladores.controlador_produto import router as produto_router
+from controladores.controlador_marca import router as marca_router
+from controladores.controlador_pedidos import router as pedidos_router
+from controladores.controlador_itens_compras import router as itens_compras
 
 
 app = FastAPI()

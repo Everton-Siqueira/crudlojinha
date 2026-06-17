@@ -4,7 +4,7 @@ from clientes import Clientes
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
-router = APIRouter(prefix="/cliente", tags=["Clientes"])
+router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
