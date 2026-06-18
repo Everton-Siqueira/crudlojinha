@@ -1,10 +1,10 @@
 from fastapi import APIRouter
-from clientes import Clientes
+from cliente import Cliente
 
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
-router = APIRouter(prefix="/clientes", tags=["Clientes"])
+router = APIRouter(prefix="/cliente", tags=["Cliente"])
 
 
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
@@ -14,7 +14,7 @@ DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 #REST
 #Create
 @router.post('/')
-def cadastrar(cliente: Clientes): #observe o tipo que é meu model
+def cadastrar(cliente: Cliente): #observe o tipo que é meu model
 
     #crio a conexao
     engine = create_engine(DATABASE_URL)
@@ -22,7 +22,7 @@ def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 
     try:
         with engine.begin() as con: #inicializo a transação
-            sql = """INSERT INTO public.clientes
+            sql = """INSERT INTO public.cliente
                                 (nome_cliente, email, cidade)
                         VALUES ( :nome_cliente, :email, :cidade)"""            
             dados = {
@@ -49,7 +49,7 @@ def getOne(id: int ):
         with engine.begin() as con:
             sql = """
                 SELECT id, nome_cliente, email, cidade
-                FROM public.clientes
+                FROM public.cliente
                 WHERE id = :id
             """
 
@@ -75,15 +75,15 @@ def todos():
 
             sql = """
                 SELECT id, nome_cliente, email, cidade
-                FROM public.clientes
+                FROM public.cliente
                 ORDER BY id
             """
 
             result = con.execute(text(sql))
 
-            clientes = [dict(row._mapping) for row in result]
+            cliente = [dict(row._mapping) for row in result]
 
-        return clientes
+        return cliente
 
     except Exception as e:
         return {"erro": str(e)}
@@ -100,7 +100,7 @@ def atualizar(id: int, cliente: Cliente):
         with engine.begin() as con:
 
             sql = """
-                UPDATE public.clientes
+                UPDATE public.cliente
                 SET nome_cliente = :nome_cliente,
                     email = :email,
                     cidade = :cidade
@@ -130,7 +130,7 @@ def deletar(id: int):
     try:
         with engine.begin() as con:
             sql = """
-                DELETE FROM public.clientes
+                DELETE FROM public.cliente
                 WHERE id = :id
             """
 
