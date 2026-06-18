@@ -14,7 +14,7 @@ DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 #REST
 #Create
 @router.post('/')
-def cadastrar(cliente: Cliente): #observe o tipo que é meu model
+def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 
     #crio a conexao
     engine = create_engine(DATABASE_URL)
@@ -109,7 +109,7 @@ def atualizar(id: int, cliente: Cliente):
 
             dados = {
                 "id": id,
-                "nome_cliente": cliente.nome,
+                "nome_cliente": cliente.nome_cliente,
                 "email": cliente.email,
                 "cidade": cliente.cidade
             }
