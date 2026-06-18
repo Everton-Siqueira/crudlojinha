@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from cliente import Cliente
+from clientes import Clientes
 
 
 #pip install sqlalchemy
