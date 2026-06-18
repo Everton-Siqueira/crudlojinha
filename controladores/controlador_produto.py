@@ -10,16 +10,15 @@ router = APIRouter(prefix="/produto", tags=["Produtos"])
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
 DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
+#crio a conexao
+engine = create_engine(DATABASE_URL)
 
 #REST
 #Create
 @router.post('/')
 def cadastrar(produto:Produto):
 
-    #crio a conexao
-    engine = create_engine(DATABASE_URL)
-
-
+   
     try:
         with engine.begin() as con: #inicializo a transação
             sql = """INSERT INTO public.produtos
@@ -38,7 +37,7 @@ def cadastrar(produto:Produto):
 
             con.execute(text(sql), dados)
 
-            return {"mensagem": "Produto cadastrado com sucesso"}
+        return {"mensagem": "Produto cadastrado com sucesso"}
 
     except Exception as e:
         print(e)
@@ -113,7 +112,7 @@ def atualizar(id: int, produto: Produto):
 
             dados = {
                 "id": id,
-                "nome_produto": produto.nome,
+                "nome_produto": produto.nome_produto,
                 "preco": produto.preco,
                 "estoque": produto.estoque,
                 "marca_id": produto.marca_id
