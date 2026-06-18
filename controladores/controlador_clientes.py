@@ -34,7 +34,8 @@ def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 
             con.execute(text(sql), dados)
             
-            
+        return {"mensagem": "Cliente cadastrado com sucesso"}
+
     except Exception as e:
         # Se der erro no banco, agora você verá o motivo real no Postman
         return {"status": "erro", "detalhe": str(e)}
