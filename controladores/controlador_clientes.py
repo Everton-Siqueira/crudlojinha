@@ -10,14 +10,16 @@ router = APIRouter(prefix="/clientes", tags=["Clientes"])
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
 DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
+#crio a conexao
+engine = create_engine(DATABASE_URL)
+
 
 #REST
 #Create
 @router.post('/')
 def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 
-    #crio a conexao
-    engine = create_engine(DATABASE_URL)
+    
 
 
     try:
