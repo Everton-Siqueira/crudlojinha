@@ -40,7 +40,10 @@ def cadastrar(produto:Produto):
         return {"mensagem": "Produto cadastrado com sucesso"}
 
     except Exception as e:
-        print(e)
+        print("ERRO DETECTADO:", e)
+        # IMPORTANTE: Retorna o erro para o Postman não receber 'null' com Status 200
+        return {"erro": str(e), "detalhe": "Verifique os atributos da classe Produto"}
+        
     engine.dispose()
         
 
@@ -112,7 +115,7 @@ def atualizar(id: int, produto: Produto):
 
             dados = {
                 "id": id,
-                "nome_produto": produto.nome_produto,
+                "nome_produto": produto.nome,
                 "preco": produto.preco,
                 "estoque": produto.estoque,
                 "marca_id": produto.marca_id
