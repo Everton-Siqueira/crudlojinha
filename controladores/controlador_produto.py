@@ -123,7 +123,9 @@ def atualizar(id: int, produto: Produto):
             return {"mensagem": "Produto atualizado com sucesso"}
 
     except Exception as e:
-        return {"erro": str(e)}
+        print("ERRO NO BANCO DE DADOS:", e)
+        return {"erro": str(e)} # Retorna o erro no Postman para facilitarexcept Exception as e:
+        
     
     
 
