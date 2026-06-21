@@ -22,7 +22,7 @@ def cadastrar(pedidos:Pedidos):
         with engine.begin() as con: #inicializo a transação
             sql = """INSERT INTO public.pedidos
                     (cliente_id, data_pedido, status)
-	                VALUES (:cliente_id, :data_pedido, :status)""";                   
+	                VALUES (:cliente_id, COALESCE(:data_pedido, CURRENT_DATE), :status)""";                   
             
             dados = {
                 "cliente_id": pedidos.cliente_id,
