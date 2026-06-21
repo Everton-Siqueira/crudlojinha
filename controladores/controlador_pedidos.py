@@ -36,7 +36,7 @@ def cadastrar(pedidos:Pedidos):
 
     except Exception as e:
         print(e)
-    return {"erro": str(e), "detalhe": "Verifique os atributos da classe Pedido"}        
+        return {"erro": str(e), "detalhe": "Verifique os atributos da classe Pedido"}        
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
 @router.get('/{id}')
