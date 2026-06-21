@@ -25,7 +25,7 @@ def cadastrar(marcas:Marcas):
 	                VALUES (:nome, :pais_origem)""";                   
             
             dados = {
-                "nome": marcas.nome,
+                "nome": marcas.nome_marca,
                 "pais_origem": marcas.pais_origem
             }
 
