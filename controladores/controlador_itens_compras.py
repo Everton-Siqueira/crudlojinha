@@ -40,30 +40,31 @@ def cadastrar(itens_compra: Itens_Compras):
         
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
-@router.get("/{pedido_id}/{produto_id}")
-def getOne(pedido_id: int, produto_id: int):
-   
+@router.get("/{pedido_id}")
+def getOne(pedido_id: int):
+
     try:
         with engine.begin() as con:
             sql = """
-                SELECT pedido_id, produto_id, quantidade, preco_unitario
-                FROM public.itens_compras
-                WHERE pedido_id = :pedido_id
-                  AND produto_id = :produto_id
-        """
+                SELECT 
+                    p.cliente_id,
+                    i.quantidade,
+                    i.preco_unitario
+                FROM public.pedidos p
+                JOIN public.itens_compras i 
+                    ON i.pedido_id = p.id
+                WHERE p.id = :pedido_id
+            """
 
-        result = con.execute(
-            text(sql),
-            {
-                "pedido_id": pedido_id,
-                "produto_id": produto_id
-            }
-        ).fetchone()
+            result = con.execute(
+                text(sql),
+                {"pedido_id": pedido_id}
+            ).fetchall()
 
-        if result is None:
-            return {"erro": "Item não encontrado"}
+            if not result:
+                return {"erro": "Pedido não encontrado"}
 
-        return dict(result._mapping)
+            return [dict(row._mapping) for row in result]
 
     except Exception as e:
         return {"erro": str(e)}
