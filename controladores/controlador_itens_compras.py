@@ -122,9 +122,9 @@ def atualizar(pedido_id: int, produto_id: int, itens_compra: Itens_Compras):
 
     except Exception as e:
         return {"erro": str(e)}
-    
-@router.delete("/{pedido_id}/{produto_id}")
-def deletar(pedido_id: int, produto_id: int):
+
+@router.delete("/{pedido_id}")
+def deletar(pedido_id: int):
     
     try:
         with engine.begin() as con:
@@ -147,4 +147,5 @@ def deletar(pedido_id: int, produto_id: int):
         }
     except Exception as e:
         return {"erro": str(e)}
+    
     
