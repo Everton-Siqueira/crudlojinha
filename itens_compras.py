@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-class ItemCompra(BaseModel):
+class Itens_Compra(BaseModel):
     pedido_id: int = Field(gt=0)
     produto_id: int = Field(gt=0)
     quantidade: int = Field(gt=0)
