@@ -131,19 +131,19 @@ def deletar(pedido_id: int):
             sql = """
                 DELETE FROM public.itens_compras
                 WHERE pedido_id = :pedido_id 
-                AND produto_id = :produto_id
+                
                 
             """
 
             con.execute(text(sql), {
                 "pedido_id": pedido_id,
-                "produto_id": produto_id
+                
             })
 
         return {
             "mensagem": "Item de compra deletado com sucesso",
             "pedido_id": pedido_id,
-            "produto_id": produto_id
+           
         }
     except Exception as e:
         return {"erro": str(e)}
