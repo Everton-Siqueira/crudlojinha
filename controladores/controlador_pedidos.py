@@ -25,7 +25,7 @@ def cadastrar(pedidos:Pedidos):
 	                VALUES (:cliente_id, COALESCE(:data_pedido, CURRENT_DATE), :status)""";                   
             
             dados = {
-                "cliente_id": pedidos.cliente_id,
+                "cliente_id": str(pedidos.cliente_id),
                 "data_pedido": pedidos.data_pedido,
                 "status": pedidos.status
             }
