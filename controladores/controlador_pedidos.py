@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from pedido import Pedido
+from pedidos import Pedidos
 
 
 #pip install sqlalchemy
@@ -10,15 +10,13 @@ router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
 DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
+#crio a conexao
+engine = create_engine(DATABASE_URL)
 
 #REST
 #Create
 @router.post('/')
-def cadastrar(pedido:Pedido):
-
-    #crio a conexao
-    engine = create_engine(DATABASE_URL)
-
+def cadastrar(pedidos:Pedidos):
 
     try:
         with engine.begin() as con: #inicializo a transação
@@ -27,9 +25,9 @@ def cadastrar(pedido:Pedido):
 	                VALUES (:cliente_id, :data_pedido, :status)""";                   
             
             dados = {
-                "cliente_id": pedido.cliente_id,
-                "data_pedido": pedido.data_pedido,
-                "status": pedido.status
+                "cliente_id": pedidos.cliente_id,
+                "data_pedido": pedidos.data_pedido,
+                "status": pedidos.status
             }
 
             con.execute(text(sql), dados)
@@ -38,14 +36,11 @@ def cadastrar(pedido:Pedido):
 
     except Exception as e:
         print(e)
-    engine.dispose()
-        
+    return {"erro": str(e), "detalhe": "Verifique os atributos da classe Pedido"}        
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
 @router.get('/{id}')
 def getOne(id: int ):
-    
-    engine = create_engine(DATABASE_URL)
 
     try:
         with engine.begin() as con:
@@ -83,9 +78,9 @@ def todos():
 
             result = con.execute(text(sql))
 
-            clientes = [dict(row._mapping) for row in result]
+            lista_pedidos = [dict(row._mapping) for row in result]
 
-        return clientes
+        return lista_pedidos
 
     except Exception as e:
         return {"erro": str(e)}
@@ -93,10 +88,8 @@ def todos():
 
 
 @router.put('/{id}')
-def atualizar(id: int, pedido: Pedido):
+def atualizar(id: int, pedidos: Pedidos):
 
-
-    engine = create_engine(DATABASE_URL)
 #logica do update
     try:
         with engine.begin() as con:
@@ -109,9 +102,9 @@ def atualizar(id: int, pedido: Pedido):
 
             dados = {
                 "id": id,
-                "cliente_id": pedido.cliente_id,
-                "data_pedido": pedido.data_pedido,
-                "status": pedido.status
+                "cliente_id": pedidos.cliente_id,
+                "data_pedido": pedidos.data_pedido,
+                "status": pedidos.status
             }
 
             result = con.execute(text(sql), dados)
@@ -125,8 +118,7 @@ def atualizar(id: int, pedido: Pedido):
 
 @router.delete("/{id}")
 def deletar(id: int):
-    engine = create_engine(DATABASE_URL)
-
+    
     try:
         with engine.begin() as con:
             sql = """
