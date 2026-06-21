@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from pedido import Pedido
+from marcas import Marcas
 
 
 #pip install sqlalchemy
@@ -10,15 +10,13 @@ router = APIRouter(prefix="/marcas", tags=["Marcas"])
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
 DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
+#crio a conexao
+engine = create_engine(DATABASE_URL)
 
 #REST
 #Create
 @router.post('/')
-def cadastrar(marca:Marca):
-
-    #crio a conexao
-    engine = create_engine(DATABASE_URL)
-
+def cadastrar(marcas:Marcas):
 
     try:
         with engine.begin() as con: #inicializo a transação
@@ -27,8 +25,8 @@ def cadastrar(marca:Marca):
 	                VALUES (:nome, :pais_origem)""";                   
             
             dados = {
-                "nome": marca.nome,
-                "pais_origem": marca.pais_origem
+                "nome": marcas.nome,
+                "pais_origem": marcas.pais_origem
             }
 
             con.execute(text(sql), dados)
@@ -37,16 +35,15 @@ def cadastrar(marca:Marca):
 
     except Exception as e:
         print(e)
-    engine.dispose()
-    
+        return {"erro": str(e), "detalhe": "Verifique os atributos da classe Marca"}
+
+
                   
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
 @router.get('/{id}')
 def getOne(id: int ):
-    
-    engine = create_engine(DATABASE_URL)
-
+      
     try:
         with engine.begin() as con:
             sql = """
@@ -70,8 +67,7 @@ def getOne(id: int ):
 #postman http://localhost/cliente/todos
 @router.get('/')
 def todos():
-    engine = create_engine(DATABASE_URL)
-
+    
     try:
         with engine.begin() as con:
 
@@ -83,40 +79,36 @@ def todos():
 
             result = con.execute(text(sql))
 
-            clientes = [dict(row._mapping) for row in result]
+            lista_marcas = [dict(row._mapping) for row in result]
 
-        return clientes
-
+        return lista_marcas
     except Exception as e:
         return {"erro": str(e)}
     
 
 
 @router.put('/{id}')
-def atualizar(id: int, marca: Marca):
-
-
-    engine = create_engine(DATABASE_URL)
+def atualizar(id: int, marcas: Marcas):
+    
 #logica do update
     try:
         with engine.begin() as con:
 
             sql = """
-                UPDATE public.pedidos
-	            SET cliente_id=:cliente_id, data_pedido=:data_pedido, status=:status    
+                UPDATE public.marcas
+                SET nome_marca= :nome, pais_origem= :pais_origem
 	            WHERE id = :id
             """
 
             dados = {
                 "id": id,
-                "cliente_id": pedido.cliente_id,
-                "data_pedido": pedido.data_pedido,
-                "status": pedido.status
+                "nome": marcas.nome,
+                "pais_origem": marcas.pais_origem
             }
 
             result = con.execute(text(sql), dados)
 
-            return {"mensagem": "Pedido atualizado com sucesso"}
+            return {"mensagem": "Marca atualizada com sucesso"}
 
     except Exception as e:
         return {"erro": str(e)}
@@ -125,8 +117,7 @@ def atualizar(id: int, marca: Marca):
 
 @router.delete("/{id}")
 def deletar(id: int):
-    engine = create_engine(DATABASE_URL)
-
+    
     try:
         with engine.begin() as con:
             sql = """
