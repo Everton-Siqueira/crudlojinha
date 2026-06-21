@@ -5,7 +5,6 @@ from itens_compras import Itens_Compras
 from sqlalchemy import create_engine, text
 router = APIRouter(prefix="/itens_compras", tags=["Itens de Compras"])
 
-
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
 DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
@@ -15,7 +14,7 @@ engine = create_engine(DATABASE_URL)
 #REST
 #Create
 @router.post('/')
-def cadastrar(item_compra: Itens_Compras):
+def cadastrar(itens_compra: Itens_Compras):
 
     try:
         with engine.begin() as con: #inicializo a transação
@@ -24,10 +23,10 @@ def cadastrar(item_compra: Itens_Compras):
 	                VALUES (:pedido_id, :produto_id, :quantidade, :preco_unitario)""";                   
             
             dados = {
-                "pedido_id": item_compra.pedido_id,
-                "produto_id": item_compra.produto_id,
-                "quantidade": item_compra.quantidade,
-                "preco_unitario": item_compra.preco_unitario
+                "pedido_id": itens_compra.pedido_id,
+                "produto_id": itens_compra.produto_id,
+                "quantidade": itens_compra.quantidade,
+                "preco_unitario": itens_compra.preco_unitario
             }
 
             con.execute(text(sql), dados)
@@ -37,20 +36,20 @@ def cadastrar(item_compra: Itens_Compras):
            
     except Exception as e:
         print(e)
-        return {"erro": str(e), "detalhe": "Verifique os atributos da classe ItemCompra"}
+        return {"erro": str(e), "detalhe": "Verifique os atributos da classe Itens_Compras"}
         
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
 @router.get("/{pedido_id}/{produto_id}")
 def getOne(pedido_id: int, produto_id: int):
-    engine = create_engine(DATABASE_URL)
-
-    with engine.begin() as con:
-        sql = """
-            SELECT pedido_id, produto_id, quantidade, preco_unitario
-            FROM public.itens_compras
-            WHERE pedido_id = :pedido_id
-              AND produto_id = :produto_id
+   
+    try:
+        with engine.begin() as con:
+            sql = """
+                SELECT pedido_id, produto_id, quantidade, preco_unitario
+                FROM public.itens_compras
+                WHERE pedido_id = :pedido_id
+                  AND produto_id = :produto_id
         """
 
         result = con.execute(
@@ -65,6 +64,10 @@ def getOne(pedido_id: int, produto_id: int):
             return {"erro": "Item não encontrado"}
 
         return dict(result._mapping)
+
+    except Exception as e:
+        return {"erro": str(e)}
+        
 
 #postman http://localhost/cliente/todos
 @router.get('/')
@@ -91,7 +94,7 @@ def todos():
 
 
 @router.put('/{pedido_id}/{produto_id}')
-def atualizar(pedido_id: int, produto_id: int, item_compra: ItemCompra):
+def atualizar(pedido_id: int, produto_id: int, itens_compra: Itens_Compras):
 
 #logica do update
     try:
@@ -108,8 +111,8 @@ def atualizar(pedido_id: int, produto_id: int, item_compra: ItemCompra):
             dados = {
                     "pedido_id": pedido_id,
                      "produto_id": produto_id,
-                    "quantidade": item_compra.quantidade,
-                 "preco_unitario": item_compra.preco_unitario
+                    "quantidade": itens_compra.quantidade,
+                 "preco_unitario": itens_compra.preco_unitario
                 }
 
             result = con.execute(text(sql), dados)
