@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from produto import Produto
 
 
@@ -8,18 +8,16 @@ router = APIRouter(prefix="/produto", tags=["Produtos"])
 
 
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
-DATABASE_URL = "postgresql://postgres:123@localhost:5432/lojinha"
+DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
+#crio a conexao
+engine = create_engine(DATABASE_URL) # criando aqui para usar em todas as funções, evitando criar uma nova conexão a cada função(rotas)
 
 #REST
 #Create
 @router.post('/')
 def cadastrar(produto:Produto):
-
-    #crio a conexao
-    engine = create_engine(DATABASE_URL)
-
-
+   
     try:
         with engine.begin() as con: #inicializo a transação
             sql = """INSERT INTO public.produtos
@@ -38,19 +36,19 @@ def cadastrar(produto:Produto):
 
             con.execute(text(sql), dados)
 
-            return {"mensagem": "Produto cadastrado com sucesso"}
+        return {"mensagem": "Produto cadastrado com sucesso"}
 
     except Exception as e:
-        print(e)
-    engine.dispose()
+        print("ERRO DETECTADO:", e)
+        # IMPORTANTE: Retorna o erro para o Postman não receber 'null' com Status 200
+        return {"erro": str(e), "detalhe": "Verifique os atributos da classe Produto"}
         
+          
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
 @router.get('/{id}')
 def getOne(id: int ):
     
-    engine = create_engine(DATABASE_URL)
-
     try:
         with engine.begin() as con:
             sql = """
@@ -62,20 +60,18 @@ def getOne(id: int ):
             result = con.execute(text(sql), {"id": id}).fetchone()
 
             if result is None:
-                return {"erro": "Produto não encontrado"}
+                raise HTTPException(status_code=404, detail="Produto não encontrado")
 
             return dict(result._mapping)
-
+    except HTTPException as http_err:
+        raise http_err
     except Exception as e:
         return {"erro": str(e)}
-    return {} #um elemento
-
-
+    
 #postman http://localhost/cliente/todos
 @router.get('/')
 def todos():
-    engine = create_engine(DATABASE_URL)
-
+        
     try:
         with engine.begin() as con:
 
@@ -98,9 +94,7 @@ def todos():
 
 @router.put('/{id}')
 def atualizar(id: int, produto: Produto):
-
-
-    engine = create_engine(DATABASE_URL)
+    
 #logica do update
     try:
         with engine.begin() as con:
@@ -124,14 +118,13 @@ def atualizar(id: int, produto: Produto):
             return {"mensagem": "Produto atualizado com sucesso"}
 
     except Exception as e:
-        return {"erro": str(e)}
-    
-    
+        print("ERRO NO BANCO DE DADOS:", e)
+        return {"erro": str(e)} # Retorna o erro no Postman para facilitar a identificação do problema 
 
+ 
 @router.delete("/{id}")
 def deletar(id: int):
-    engine = create_engine(DATABASE_URL)
-
+    
     try:
         with engine.begin() as con:
             sql = """

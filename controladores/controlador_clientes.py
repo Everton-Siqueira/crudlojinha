@@ -4,38 +4,43 @@ from clientes import Clientes
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
-router = APIRouter(prefix="/cliente", tags=["Clientes"])
+router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
-DATABASE_URL = "postgresql://postgres:123@localhost:5432/lojinha"
+DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
+
+#crio a conexao
+engine = create_engine(DATABASE_URL)
 
 
 #REST
 #Create
 @router.post('/')
-def cadastrar(cliente: Cliente): #observe o tipo que é meu model
+def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 
-    #crio a conexao
-    engine = create_engine(DATABASE_URL)
+    
 
 
     try:
         with engine.begin() as con: #inicializo a transação
-            sql = """INSERT INTO public.clientes
+            sql = """INSERT INTO public.cliente
                                 (nome_cliente, email, cidade)
-                        VALUES ( :nomezinho, :email, :cidade)"""            
+                        VALUES ( :nome_cliente, :email, :cidade)"""            
             dados = {
-                "nomezinho" : cliente.nome, #cliente . propriedade
+                "nome_cliente" : cliente.nome_cliente, #cliente . propriedade
                 "email": cliente.email,
                 "cidade": cliente.cidade
             }
 
 
             con.execute(text(sql), dados)
+            
+        return {"mensagem": "Cliente cadastrado com sucesso"}
+
     except Exception as e:
-        print(e)
-    engine.dispose()
+        # Se der erro no banco, agora você verá o motivo real no Postman
+        return {"status": "erro", "detalhe": str(e)}
 
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
@@ -48,7 +53,7 @@ def getOne(id: int ):
         with engine.begin() as con:
             sql = """
                 SELECT id, nome_cliente, email, cidade
-                FROM public.clientes
+                FROM public.cliente
                 WHERE id = :id
             """
 
@@ -74,15 +79,15 @@ def todos():
 
             sql = """
                 SELECT id, nome_cliente, email, cidade
-                FROM public.clientes
+                FROM public.cliente
                 ORDER BY id
             """
 
             result = con.execute(text(sql))
 
-            clientes = [dict(row._mapping) for row in result]
+            cliente = [dict(row._mapping) for row in result]
 
-        return clientes
+        return cliente
 
     except Exception as e:
         return {"erro": str(e)}
@@ -99,7 +104,7 @@ def atualizar(id: int, cliente: Cliente):
         with engine.begin() as con:
 
             sql = """
-                UPDATE public.clientes
+                UPDATE public.cliente
                 SET nome_cliente = :nome_cliente,
                     email = :email,
                     cidade = :cidade
@@ -108,7 +113,7 @@ def atualizar(id: int, cliente: Cliente):
 
             dados = {
                 "id": id,
-                "nome_cliente": cliente.nome,
+                "nome_cliente": cliente.nome_cliente,
                 "email": cliente.email,
                 "cidade": cliente.cidade
             }
@@ -129,7 +134,7 @@ def deletar(id: int):
     try:
         with engine.begin() as con:
             sql = """
-                DELETE FROM public.clientes
+                DELETE FROM public.cliente
                 WHERE id = :id
             """
 

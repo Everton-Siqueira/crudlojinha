@@ -1,24 +1,20 @@
 from fastapi import APIRouter
-from itens_compras import ItemCompra
-
+from itens_compras import Itens_Compras
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
 router = APIRouter(prefix="/itens_compras", tags=["Itens de Compras"])
 
-
 #inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
-DATABASE_URL = "postgresql://postgres:123@localhost:5432/lojinha"
+DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
+#crio a conexao
+engine = create_engine(DATABASE_URL)
 
 #REST
 #Create
 @router.post('/')
-def cadastrar(item_compra: ItemCompra):
-
-    #crio a conexao
-    engine = create_engine(DATABASE_URL)
-
+def cadastrar(itens_compra: Itens_Compras):
 
     try:
         with engine.begin() as con: #inicializo a transação
@@ -27,10 +23,10 @@ def cadastrar(item_compra: ItemCompra):
 	                VALUES (:pedido_id, :produto_id, :quantidade, :preco_unitario)""";                   
             
             dados = {
-                "pedido_id": item_compra.pedido_id,
-                "produto_id": item_compra.produto_id,
-                "quantidade": item_compra.quantidade,
-                "preco_unitario": item_compra.preco_unitario
+                "pedido_id": itens_compra.pedido_id,
+                "produto_id": itens_compra.produto_id,
+                "quantidade": itens_compra.quantidade,
+                "preco_unitario": itens_compra.preco_unitario
             }
 
             con.execute(text(sql), dados)
@@ -40,39 +36,43 @@ def cadastrar(item_compra: ItemCompra):
            
     except Exception as e:
         print(e)
-    engine.dispose()
+        return {"erro": str(e), "detalhe": "Verifique os atributos da classe Itens_Compras"}
         
 
 #recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
-@router.get("/{pedido_id}/{produto_id}")
-def getOne(pedido_id: int, produto_id: int):
-    engine = create_engine(DATABASE_URL)
+@router.get("/{pedido_id}")
+def getOne(pedido_id: int):
 
-    with engine.begin() as con:
-        sql = """
-            SELECT pedido_id, produto_id, quantidade, preco_unitario
-            FROM public.itens_compras
-            WHERE pedido_id = :pedido_id
-              AND produto_id = :produto_id
-        """
+    try:
+        with engine.begin() as con:
+            sql = """
+                SELECT 
+                    p.cliente_id,
+                    i.quantidade,
+                    i.preco_unitario
+                FROM public.pedidos p
+                JOIN public.itens_compras i 
+                    ON i.pedido_id = p.id
+                WHERE p.id = :pedido_id
+            """
 
-        result = con.execute(
-            text(sql),
-            {
-                "pedido_id": pedido_id,
-                "produto_id": produto_id
-            }
-        ).fetchone()
+            result = con.execute(
+                text(sql),
+                {"pedido_id": pedido_id}
+            ).fetchall()
 
-        if result is None:
-            return {"erro": "Item não encontrado"}
+            if not result:
+                return {"erro": "Pedido não encontrado"}
 
-        return dict(result._mapping)
+            return [dict(row._mapping) for row in result]
+
+    except Exception as e:
+        return {"erro": str(e)}
+        
 
 #postman http://localhost/cliente/todos
 @router.get('/')
 def todos():
-    engine = create_engine(DATABASE_URL)
 
     try:
         with engine.begin() as con:
@@ -95,10 +95,8 @@ def todos():
 
 
 @router.put('/{pedido_id}/{produto_id}')
-def atualizar(pedido_id: int, produto_id: int, item_compra: ItemCompra):
+def atualizar(pedido_id: int, produto_id: int, itens_compra: Itens_Compras):
 
-
-    engine = create_engine(DATABASE_URL)
 #logica do update
     try:
         with engine.begin() as con:
@@ -114,8 +112,8 @@ def atualizar(pedido_id: int, produto_id: int, item_compra: ItemCompra):
             dados = {
                     "pedido_id": pedido_id,
                      "produto_id": produto_id,
-                    "quantidade": item_compra.quantidade,
-                 "preco_unitario": item_compra.preco_unitario
+                    "quantidade": itens_compra.quantidade,
+                 "preco_unitario": itens_compra.preco_unitario
                 }
 
             result = con.execute(text(sql), dados)
@@ -124,32 +122,30 @@ def atualizar(pedido_id: int, produto_id: int, item_compra: ItemCompra):
 
     except Exception as e:
         return {"erro": str(e)}
-    
-    
 
-@router.delete("/{pedido_id}/{produto_id}")
-def deletar(pedido_id: int, produto_id: int):
-    engine = create_engine(DATABASE_URL)
-
+@router.delete("/{pedido_id}")
+def deletar(pedido_id: int):
+    
     try:
         with engine.begin() as con:
             sql = """
                 DELETE FROM public.itens_compras
                 WHERE pedido_id = :pedido_id 
-                AND produto_id = :produto_id
+                
                 
             """
 
             con.execute(text(sql), {
                 "pedido_id": pedido_id,
-                "produto_id": produto_id
+                
             })
 
         return {
             "mensagem": "Item de compra deletado com sucesso",
             "pedido_id": pedido_id,
-            "produto_id": produto_id
+           
         }
     except Exception as e:
         return {"erro": str(e)}
+    
     
