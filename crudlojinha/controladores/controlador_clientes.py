@@ -6,9 +6,8 @@ from clientes import Clientes
 from sqlalchemy import create_engine, text
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
+from banco_dados import DATABASE_URL
 
-#inserção no banco "postgresql://usuario:senha@servidor:porta/banco"
-DATABASE_URL = "postgresql://postgres:123@localhost:5432/crudlojinha"
 
 #crio a conexao
 engine = create_engine(DATABASE_URL)

@@ -1,0 +1,1 @@
+DATABASE_URL = "GArHurh@dpg-d8uiffbeo5us73dvqdi0-a.oregon-postgres.render.com/banco_c99m"
