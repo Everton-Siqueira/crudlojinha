@@ -1,1 +1,1 @@
-DATABASE_URL = "postgresql://GArHurh:dpg-d8uiffbeo5us73dvqdi0-a.oregon-postgres.render.com/banco_c99m"
+DATABASE_URL = postgresql://banco_c99m_user:YwMgiALSK8ksLyWc8fq6XF9qQGArHurh@dpg-d8uiffbeo5us73dvqdi0-a.oregon-postgres.render.com/banco_c99m 
