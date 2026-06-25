@@ -8,6 +8,7 @@ from controladores.controlador_marcas import router as marcas_router
 from controladores.controlador_pedidos import router as pedidos_router
 from controladores.controlador_itens_compras import router as itens_compras
 
+from clientes import Clientes
 
 app = FastAPI()
 
@@ -23,7 +24,7 @@ app.include_router(itens_compras)
 
 
 
-
+Clientes.model_rebuild()
 
 if __name__ == '__main__':
     uvicorn.run(
