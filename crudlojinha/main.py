@@ -23,7 +23,7 @@ app.include_router(itens_compras)
 
 if __name__ == '__main__':
     uvicorn.run(
-        'main:app',
+        'main:crudlojinha',
         port = 80,
         reload = True
     )
