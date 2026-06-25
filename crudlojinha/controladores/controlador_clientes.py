@@ -95,7 +95,7 @@ def todos():
 
 
 @router.put('/{id}')
-def atualizar(id: int, cliente: Cliente):
+def atualizar(id: int, cliente: Clientes):
 
 
     engine = create_engine(DATABASE_URL)
