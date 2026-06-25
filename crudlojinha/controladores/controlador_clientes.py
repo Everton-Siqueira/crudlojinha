@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from clientes import Clientes
-
+from crudlojinha.clientes import Cliente
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
