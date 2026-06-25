@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pedidos import Pedidos
+from banco_dados import DATABASE_URL
 
 
 #pip install sqlalchemy
@@ -7,7 +8,6 @@ from sqlalchemy import create_engine, text
 router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
 
 
-from banco_dados import DATABASE_URL
 
 #crio a conexao
 engine = create_engine(DATABASE_URL)

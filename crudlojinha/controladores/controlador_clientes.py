@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from clientes import Clientes
-
+from banco_dados import DATABASE_URL
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
-from banco_dados import DATABASE_URL
+
 
 
 #crio a conexao

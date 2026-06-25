@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from produto import Produto
+from banco_dados import DATABASE_URL
 
 
 #pip install sqlalchemy
@@ -7,7 +8,6 @@ from sqlalchemy import create_engine, text
 router = APIRouter(prefix="/produto", tags=["Produtos"])
 
 
-from banco_dados import DATABASE_URL
 
 #crio a conexao
 engine = create_engine(DATABASE_URL) # criando aqui para usar em todas as funções, evitando criar uma nova conexão a cada função(rotas)
