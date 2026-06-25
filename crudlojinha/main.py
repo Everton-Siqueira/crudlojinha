@@ -11,6 +11,9 @@ from controladores.controlador_itens_compras import router as itens_compras
 
 app = FastAPI()
 
+@app.get("/")
+def read_root():
+    return {"message": "Bem-vindo à API da CrudLojinha!", "status": "ok"}
 
 app.include_router(clientes_router)
 app.include_router(produto_router)
