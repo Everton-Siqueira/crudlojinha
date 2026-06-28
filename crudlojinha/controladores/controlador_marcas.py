@@ -21,7 +21,7 @@ def cadastrar(marca: Marca):
         with engine.begin() as con: #inicializo a transação
             sql = """INSERT INTO public.marcas
                     (nome_marca, pais_origem)
-	                VALUES (:nome, :pais_origem)""";                   
+	                VALUES (:nome_marca, :pais_origem)""";                   
             
             dados = {
                 "nome": marca.nome_marca,
@@ -87,8 +87,8 @@ def todos():
 
 
 @router.put('/{id}')
-def atualizar(id: int, marca: Marca):
-    
+def atualizar(id: int, marca: Marca, pais_origem: PaisOrigem):
+
 #logica do update
     try:
         with engine.begin() as con:
