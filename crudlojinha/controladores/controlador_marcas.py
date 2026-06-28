@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from schemas import Marcas
+from schemas import Marca
 from banco_dados import DATABASE_URL
 
 
