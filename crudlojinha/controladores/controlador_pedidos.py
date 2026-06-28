@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from schemas import Pedidos
+from schemas import Pedido
 from banco_dados import DATABASE_URL
 
 
