@@ -2,6 +2,16 @@ import os
 import uvicorn
 from fastapi import FastAPI
 
+# 1. Importa o engine e a Base do seu arquivo banco_dados.py
+from banco_dados import engine, Base  
+
+# 2. Importa os modelos para o SQLAlchemy saber quais tabelas criar
+import clientes
+import marcas
+import pedidos
+import produto
+import itens_compras
+
 from controladores.controlador_clientes import router as clientes_router
 from controladores.controlador_produto import router as produto_router
 from controladores.controlador_marcas import router as marcas_router
@@ -9,6 +19,9 @@ from controladores.controlador_pedidos import router as pedidos_router
 from controladores.controlador_itens_compras import router as itens_compras_router
 
 app = FastAPI()
+
+# 3. Esta linha cria todas as tabelas no banco de dados caso elas não existam
+Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def read_root():
