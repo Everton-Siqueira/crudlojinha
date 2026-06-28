@@ -15,7 +15,7 @@ engine = create_engine(DATABASE_URL)
 #REST
 #Create
 @router.post('/')
-def cadastrar(marcas:Marcas):
+def cadastrar(marca: Marca):
 
     try:
         with engine.begin() as con: #inicializo a transação
@@ -24,8 +24,8 @@ def cadastrar(marcas:Marcas):
 	                VALUES (:nome, :pais_origem)""";                   
             
             dados = {
-                "nome": marcas.nome_marca,
-                "pais_origem": marcas.pais_origem
+                "nome": marca.nome_marca,
+                "pais_origem": marca.pais_origem
             }
 
             con.execute(text(sql), dados)
@@ -87,7 +87,7 @@ def todos():
 
 
 @router.put('/{id}')
-def atualizar(id: int, marcas: Marcas):
+def atualizar(id: int, marca: Marca):
     
 #logica do update
     try:
@@ -101,8 +101,8 @@ def atualizar(id: int, marcas: Marcas):
 
             dados = {
                 "id": id,
-                "nome": marcas.nome,
-                "pais_origem": marcas.pais_origem
+                "nome": marca.nome_marca,
+                "pais_origem": marca.pais_origem
             }
 
             result = con.execute(text(sql), dados)
