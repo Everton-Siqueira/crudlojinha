@@ -23,7 +23,7 @@ def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 
     try:
         with engine.begin() as con: #inicializo a transação
-            sql = """INSERT INTO public.clienteS
+            sql = """INSERT INTO public.clientes
                                 (nome_cliente, email, cidade)
                         VALUES ( :nome_cliente, :email, :cidade)"""            
             dados = {
@@ -97,7 +97,7 @@ def atualizar(id: int, cliente: Clientes):
         with engine.begin() as con:
 
             sql = """
-                UPDATE public.cliente
+                UPDATE public.clientes
                 SET nome_cliente = :nome_cliente,
                     email = :email,
                     cidade = :cidade
@@ -126,7 +126,7 @@ def deletar(id: int):
     try:
         with engine.begin() as con:
             sql = """
-                DELETE FROM public.cliente
+                DELETE FROM public.clientes
                 WHERE id = :id
             """
 
