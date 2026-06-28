@@ -7,8 +7,6 @@ from banco_dados import DATABASE_URL
 from sqlalchemy import create_engine, text
 router = APIRouter(prefix="/produto", tags=["Produtos"])
 
-
-
 #crio a conexao
 engine = create_engine(DATABASE_URL) # criando aqui para usar em todas as funções, evitando criar uma nova conexão a cada função(rotas)
 
@@ -30,8 +28,6 @@ def cadastrar(produto:Produto):
                 "marca_id" : produto.marca_id
                 
             }
-
-          
 
             con.execute(text(sql), dados)
 
