@@ -19,7 +19,7 @@ def cadastrar(produto:Produto):
    
     try:
         with engine.begin() as con: #inicializo a transação
-            sql = """INSERT INTO public.produtos
+            sql = """INSERT INTO public.produto
                          (nome_produto, preco, estoque, marca_id)
 	                    VALUES (:nome, :preco, :estoque, :marca_id)""";                   
             
@@ -99,7 +99,7 @@ def atualizar(id: int, produto: Produto):
         with engine.begin() as con:
 
             sql = """
-                UPDATE public.produtos
+                UPDATE public.produto
 	            SET nome_produto= :nome_produto, preco= :preco, estoque= :estoque, marca_id= :marca_id
 	            WHERE id = :id
             """
@@ -127,7 +127,7 @@ def deletar(id: int):
     try:
         with engine.begin() as con:
             sql = """
-                DELETE FROM public.produtos 
+                DELETE FROM public.produto
                 WHERE id = :id
                 
             """
