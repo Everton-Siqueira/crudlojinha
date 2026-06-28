@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from schemas import Itens_Compras
+from schemas import Itens_Compra
 from banco_dados import DATABASE_URL
 
 #pip install sqlalchemy
