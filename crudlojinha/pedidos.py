@@ -1,10 +1,10 @@
-from pydantic import BaseModel, Field
-from datetime import date
-from typing import Optional
+from sqlalchemy import Column, Integer, String, ForeignKey
+from banco_dados import Base
 
-class Pedidos(BaseModel):
-    cliente_id: int = Field(gt=0)
-    data_pedido: Optional[date] = None
-    status: str = Field(min_length=3, max_length=50)
+class PedidoTabela(Base):
+    __tablename__ = "pedidos"
 
-    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    data_pedido = Column(String(50), nullable=False)  # Ou DateTime se preferir
+    status = Column(String(50), nullable=False)
+    cliente_id = Column(Integer, ForeignKey("clientes.id", ondelete="CASCADE"), nullable=False)

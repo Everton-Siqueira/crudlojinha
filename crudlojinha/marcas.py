@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field
+from sqlalchemy import Column, Integer, String
+from banco_dados import Base
 
-class Marcas(BaseModel):
-    id: int | None = None
-    nome_marca: str = Field(min_length=2, max_length=100)
-    pais_origem: str = Field(min_length=2, max_length=100)
+class MarcaTabela(Base):
+    __tablename__ = "marcas"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nome_marca = Column(String(255), nullable=False)

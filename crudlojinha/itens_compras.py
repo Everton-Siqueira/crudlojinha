@@ -1,7 +1,10 @@
-from pydantic import BaseModel, Field
+from sqlalchemy import Column, Integer, ForeignKey
+from banco_dados import Base
 
-class Itens_Compras(BaseModel):
-    pedido_id: int = Field(gt=0)
-    produto_id: int = Field(gt=0)
-    quantidade: int = Field(gt=0)
-    preco_unitario: float = Field(gt=0)
+class ItemCompraTabela(Base):
+    __tablename__ = "itens_compras"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quantidade = Column(Integer, nullable=False)
+    pedido_id = Column(Integer, ForeignKey("pedidos.id", ondelete="CASCADE"), nullable=False)
+    produto_id = Column(Integer, ForeignKey("produto.id", ondelete="CASCADE"), nullable=False)

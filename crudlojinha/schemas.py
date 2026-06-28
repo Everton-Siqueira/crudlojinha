@@ -1,15 +1,30 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, Field
 
-class ClienteSchema(BaseModel):
-    nome_cliente: str = Field(min_length=3)
-    cidade: str = Field(min_length=3)
-    email: EmailStr
+# Schema de Cliente
+class Cliente(BaseModel):
+    nome: str = Field(min_length=2)
+    email: str
+    cidade: str
 
-    @field_validator("nome_cliente")
-    def nome_deve_conter_espaco(cls, value: str):
-        value = " ".join(value.strip().split())
+# Schema de Produto
+class Produto(BaseModel):
+    nome: str = Field(min_length=2)
+    preco: float = Field(gt=0)
+    estoque: int = Field(ge=0)
+    marca_id: int = Field(gt=0)
 
-        if " " not in value:
-            raise ValueError("O nome deve conter ao menos um espaço.")
+# Schema de Marca
+class Marca(BaseModel):
+    nome_marca: str = Field(min_length=2)
 
-        return value
+# Schema de Pedido
+class Pedido(BaseModel):
+    data_pedido: str
+    status: str
+    cliente_id: int = Field(gt=0)
+
+# Schema de Item de Compra
+class ItemCompra(BaseModel):
+    quantidade: int = Field(gt=0)
+    pedido_id: int = Field(gt=0)
+    produto_id: int = Field(gt=0)
