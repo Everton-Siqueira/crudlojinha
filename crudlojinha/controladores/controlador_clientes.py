@@ -1,101 +1,87 @@
 from fastapi import APIRouter
-from clientes import Clientes
+from schemas import ClienteSchema
 from banco_dados import DATABASE_URL
 
-#pip install sqlalchemy
 from sqlalchemy import create_engine, text
+
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
-
-
-
-#crio a conexao
 engine = create_engine(DATABASE_URL)
 
 
-#REST
-#Create
-@router.post('/')
-def cadastrar(cliente: Clientes): #observe o tipo que é meu model
-
-    
-
+# CREATE
+@router.post("/")
+def cadastrar(cliente: ClienteSchema):
 
     try:
-        with engine.begin() as con: #inicializo a transação
-            sql = """INSERT INTO public.clientes
-                                (nome_cliente, email, cidade)
-                        VALUES ( :nome_cliente, :email, :cidade)"""            
-            dados = {
-                "nome_cliente" : cliente.nome_cliente, #cliente . propriedade
+        with engine.begin() as con:
+            sql = """
+                INSERT INTO public.clientes
+                (nome_cliente, email, cidade)
+                VALUES (:nome_cliente, :email, :cidade)
+            """
+
+            con.execute(text(sql), {
+                "nome_cliente": cliente.nome_cliente,
                 "email": cliente.email,
                 "cidade": cliente.cidade
-            }
+            })
 
-
-            con.execute(text(sql), dados)
-            
         return {"mensagem": "Cliente cadastrado com sucesso"}
 
     except Exception as e:
-        # Se der erro no banco, agora você verá o motivo real no Postman
-        return {"status": "erro", "detalhe": str(e)}
+        return {"erro": str(e)}
 
 
-#recovery =>consulta (getOne e getAll => pegar 1 ou pegar todos)
-@router.get('/{id}')
-def getOne(id: int ):
-    
+# GET ONE
+@router.get("/{id}")
+def getOne(id: int):
+
     try:
         with engine.begin() as con:
             sql = """
                 SELECT id, nome_cliente, email, cidade
-                FROM public.cliente
+                FROM public.clientes
                 WHERE id = :id
             """
 
             result = con.execute(text(sql), {"id": id}).fetchone()
 
-            if result is None:
+            if not result:
                 return {"erro": "Cliente não encontrado"}
 
             return dict(result._mapping)
 
     except Exception as e:
         return {"erro": str(e)}
-    return {} #um elemento
 
 
-#postman http://localhost/cliente/todos
-@router.get('/')
+# GET ALL
+@router.get("/")
 def todos():
-    
+
     try:
         with engine.begin() as con:
-
             sql = """
                 SELECT id, nome_cliente, email, cidade
-                FROM public.cliente
+                FROM public.clientes
                 ORDER BY id
             """
 
             result = con.execute(text(sql))
 
-            cliente = [dict(row._mapping) for row in result]
-
-        return cliente
+            return [dict(row._mapping) for row in result]
 
     except Exception as e:
         return {"erro": str(e)}
-    
 
 
-@router.put('/{id}')
-def atualizar(id: int, cliente: Clientes):
+# UPDATE
+@router.put("/{id}")
+def atualizar(id: int, cliente: ClienteSchema):
 
     try:
         with engine.begin() as con:
-
             sql = """
                 UPDATE public.clientes
                 SET nome_cliente = :nome_cliente,
@@ -104,25 +90,23 @@ def atualizar(id: int, cliente: Clientes):
                 WHERE id = :id
             """
 
-            dados = {
+            con.execute(text(sql), {
                 "id": id,
                 "nome_cliente": cliente.nome_cliente,
                 "email": cliente.email,
                 "cidade": cliente.cidade
-            }
+            })
 
-            result = con.execute(text(sql), dados)
-
-            return {"mensagem": "Cliente atualizado com sucesso"}
+        return {"mensagem": "Cliente atualizado com sucesso"}
 
     except Exception as e:
         return {"erro": str(e)}
-    
-    
 
+
+# DELETE
 @router.delete("/{id}")
 def deletar(id: int):
-    
+
     try:
         with engine.begin() as con:
             sql = """
@@ -132,8 +116,7 @@ def deletar(id: int):
 
             con.execute(text(sql), {"id": id})
 
-        return {"mensagem": "Cliente deletado com sucesso", "id": id}
+        return {"mensagem": "Cliente deletado com sucesso"}
 
     except Exception as e:
         return {"erro": str(e)}
-    
