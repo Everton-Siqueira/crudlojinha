@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from schemas import ClienteSchema
+from schemas import Cliente
 from banco_dados import DATABASE_URL
 
 from sqlalchemy import create_engine, text
@@ -11,7 +11,7 @@ engine = create_engine(DATABASE_URL)
 
 # CREATE
 @router.post("/")
-def cadastrar(cliente: ClienteSchema):
+def cadastrar(cliente: Cliente):
 
     try:
         with engine.begin() as con:
@@ -22,7 +22,7 @@ def cadastrar(cliente: ClienteSchema):
             """
 
             con.execute(text(sql), {
-                "nome_cliente": cliente.nome_cliente,
+                "nome_cliente": cliente.nome,
                 "email": cliente.email,
                 "cidade": cliente.cidade
             })
@@ -78,7 +78,7 @@ def todos():
 
 # UPDATE
 @router.put("/{id}")
-def atualizar(id: int, cliente: ClienteSchema):
+def atualizar(id: int, cliente: Cliente):
 
     try:
         with engine.begin() as con:
@@ -92,7 +92,7 @@ def atualizar(id: int, cliente: ClienteSchema):
 
             con.execute(text(sql), {
                 "id": id,
-                "nome_cliente": cliente.nome_cliente,
+                "nome_cliente": cliente.nome,
                 "email": cliente.email,
                 "cidade": cliente.cidade
             })
