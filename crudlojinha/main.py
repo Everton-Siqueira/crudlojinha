@@ -35,8 +35,12 @@ Pedidos.model_rebuild()
 Itens_Compras.model_rebuild()
 
 if __name__ == '__main__':
+    # Lê a porta que o Render vai te dar (padrão 10000 no Render se não achar)
+    port = int(os.getenv("PORT", 8000)) 
+    
     uvicorn.run(
         'main:app',
-        port = 80,
-        reload = True
+        host='0.0.0.0', # Importante: mude para 0.0.0.0 para aceitar conexões externas
+        port=port,
+        reload=False # Desative o reload em produção no Render
     )

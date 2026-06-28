@@ -46,8 +46,6 @@ def cadastrar(cliente: Clientes): #observe o tipo que é meu model
 @router.get('/{id}')
 def getOne(id: int ):
     
-    engine = create_engine(DATABASE_URL)
-
     try:
         with engine.begin() as con:
             sql = """
@@ -71,8 +69,7 @@ def getOne(id: int ):
 #postman http://localhost/cliente/todos
 @router.get('/')
 def todos():
-    engine = create_engine(DATABASE_URL)
-
+    
     try:
         with engine.begin() as con:
 
@@ -96,9 +93,6 @@ def todos():
 @router.put('/{id}')
 def atualizar(id: int, cliente: Clientes):
 
-
-    engine = create_engine(DATABASE_URL)
-#logica do update
     try:
         with engine.begin() as con:
 
@@ -128,8 +122,7 @@ def atualizar(id: int, cliente: Clientes):
 
 @router.delete("/{id}")
 def deletar(id: int):
-    engine = create_engine(DATABASE_URL)
-
+    
     try:
         with engine.begin() as con:
             sql = """
