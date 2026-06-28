@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from produto import Produto
+from schemas import Produto
 from banco_dados import DATABASE_URL
 
 
