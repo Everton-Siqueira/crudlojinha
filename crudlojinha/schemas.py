@@ -16,7 +16,8 @@ class Produto(BaseModel):
 # Schema de Marca
 class Marca(BaseModel):
     nome_marca: str = Field(min_length=2)
-
+    pais_origem: str = Field(min_length=2)
+    
 # Schema de Pedido
 class Pedido(BaseModel):
     data_pedido: str
