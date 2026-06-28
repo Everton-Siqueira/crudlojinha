@@ -52,7 +52,7 @@ def getOne(id: int ):
         with engine.begin() as con:
             sql = """
                 SELECT id, nome_produto, preco, estoque, marca_id
-	            FROM public.produtos
+	            FROM public.produto
                 WHERE id = :id
             """
 
@@ -67,7 +67,6 @@ def getOne(id: int ):
     except Exception as e:
         return {"erro": str(e)}
     
-#postman http://localhost/cliente/todos
 @router.get('/')
 def todos():
         
@@ -76,15 +75,15 @@ def todos():
 
             sql = """
                 SELECT id, nome_produto, preco, estoque, marca_id
-	            FROM public.produtos
+	            FROM public.produto
                 ORDER BY id
             """
 
             result = con.execute(text(sql))
 
-            clientes = [dict(row._mapping) for row in result]
+            produto = [dict(row._mapping) for row in result]
 
-        return clientes
+        return produto
 
     except Exception as e:
         return {"erro": str(e)}
