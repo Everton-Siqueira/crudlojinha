@@ -22,7 +22,7 @@ def cadastrar(produto:Produto):
 	                    VALUES (:nome, :preco, :estoque, :marca_id)""";                   
             
             dados = {
-                "nome" : produto.nome,
+                "nome_produto" : produto.nome,
                 "preco" : produto.preco,
                 "estoque" : produto.estoque,
                 "marca_id" : produto.marca_id
