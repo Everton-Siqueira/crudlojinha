@@ -6,3 +6,4 @@ class MarcaTabela(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome_marca = Column(String(255), nullable=False)
+    pais_origem = Column(String(100), nullable=False)

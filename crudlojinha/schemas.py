@@ -2,13 +2,13 @@ from pydantic import BaseModel, Field
 
 # Schema de Cliente
 class Cliente(BaseModel):
-    nome: str = Field(min_length=2)
+    nome_cliente: str = Field(min_length=2)
     email: str
     cidade: str
 
 # Schema de Produto
 class Produto(BaseModel):
-    nome: str = Field(min_length=2)
+    nome_produto: str = Field(min_length=2)
     preco: float = Field(gt=0)
     estoque: int = Field(ge=0)
     marca_id: int = Field(gt=0)
