@@ -4,14 +4,21 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+# Se estiver rodando local sem a variável, usa o SQLite ou um banco local para não quebrar
 if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL não configurada.")
+    DATABASE_URL = "sqlite:///./local.db"  # Cria um banco de teste local automático
 
-# Render às vezes precisa disso:
+# Corrige os prefixos do Render para o SQLAlchemy
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+# Configura o engine corretamente para SQLite ou PostgreSQL
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
