@@ -5,7 +5,7 @@ from banco_dados import DATABASE_URL
 
 #pip install sqlalchemy
 from sqlalchemy import create_engine, text
-router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
+router = APIRouter(prefix="/pedido", tags=["Pedido"])
 
 
 
@@ -15,7 +15,7 @@ engine = create_engine(DATABASE_URL)
 #REST
 #Create
 @router.post('/')
-def cadastrar(pedidos:Pedidos):
+def cadastrar(pedidos:Pedido):
 
     try:
         with engine.begin() as con: #inicializo a transação
@@ -87,7 +87,7 @@ def todos():
 
 
 @router.put('/{id}')
-def atualizar(id: int, pedidos: Pedidos):
+def atualizar(id: int, pedidos: Pedido):
 
 #logica do update
     try:
