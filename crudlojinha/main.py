@@ -24,7 +24,7 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 # 3. Esta linha força a exclusão das tabelas antigas e desatualizadas
-Base.metadata.drop_all(bind=engine)
+#Base.metadata.drop_all(bind=engine)
 
 # Esta linha cria todas as tabelas novas com as colunas corretas
 Base.metadata.create_all(bind=engine)
