@@ -25,7 +25,7 @@ class Pedido(BaseModel):
     cliente_id: int = Field(gt=0)
 
 # Schema de Item de Compra
-class Itens_Compra(BaseModel):
+class Itens_Compras(BaseModel):
     quantidade: int = Field(gt=0)
     pedido_id: int = Field(gt=0)
     produto_id: int = Field(gt=0)

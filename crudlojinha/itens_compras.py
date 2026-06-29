@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey
 from banco_dados import Base
 
-class ItemCompraTabela(Base):
+class Itens_ComprasTabela(Base):
     __tablename__ = "itens_compras"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
