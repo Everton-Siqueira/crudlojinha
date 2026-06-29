@@ -24,7 +24,7 @@ def cadastrar(marca: Marca):
 	                VALUES (:nome_marca, :pais_origem)""";                   
             
             dados = {
-                "nome": marca.nome_marca,
+                "nome_marca": marca.nome_marca,
                 "pais_origem": marca.pais_origem
             }
 
@@ -87,7 +87,7 @@ def todos():
 
 
 @router.put('/{id}')
-def atualizar(id: int, marca: Marca, pais_origem: PaisOrigem):
+def atualizar(id: int, marca: Marca):
 
 #logica do update
     try:
