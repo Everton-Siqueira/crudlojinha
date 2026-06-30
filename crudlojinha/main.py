@@ -20,6 +20,15 @@ from controladores.controlador_itens_compras import router as itens_compras_rout
 
 app = FastAPI()
 
+from sqlalchemy import text
+
+# Executa o comando para criar a coluna apenas se ela não existir
+with engine.begin() as conn:
+    conn.execute(text("""
+        ALTER TABLE public.itens_compras 
+        ADD COLUMN IF NOT EXISTS preco_unitario NUMERIC(10, 2) DEFAULT 0.00;
+    """))
+
 # 3. Esta linha cria todas as tabelas no banco de dados caso elas não existam
 Base.metadata.create_all(bind=engine)
 
