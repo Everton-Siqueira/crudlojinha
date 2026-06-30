@@ -22,7 +22,7 @@ def cadastrar(produto:Produto):
 	                    VALUES (:nome_produto, :preco, :estoque, :marca_id)""";                   
             
             dados = {
-                "nome_produto" : produto.nome,
+                "nome_produto" : produto.nome_produto,
                 "preco" : produto.preco,
                 "estoque" : produto.estoque,
                 "marca_id" : produto.marca_id
@@ -101,7 +101,7 @@ def atualizar(id: int, produto: Produto):
 
             dados = {
                 "id": id,
-                "nome_produto": produto.nome,
+                "nome_produto": produto.nome_produto,
                 "preco": produto.preco,
                 "estoque": produto.estoque,
                 "marca_id": produto.marca_id
