@@ -22,7 +22,7 @@ def cadastrar(cliente: Cliente):
             """
 
             con.execute(text(sql), {
-                "nome_cliente": cliente.nome,
+                "nome_cliente": cliente.nome_cliente,
                 "email": cliente.email,
                 "cidade": cliente.cidade
             })
