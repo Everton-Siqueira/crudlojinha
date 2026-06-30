@@ -19,7 +19,7 @@ def cadastrar(produto:Produto):
         with engine.begin() as con: #inicializo a transação
             sql = """INSERT INTO public.produto
                          (nome_produto, preco, estoque, marca_id)
-	                    VALUES (:nome, :preco, :estoque, :marca_id)""";                   
+	                    VALUES (:nome_produto, :preco, :estoque, :marca_id)""";                   
             
             dados = {
                 "nome_produto" : produto.nome,
