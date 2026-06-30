@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, numeric
+from sqlalchemy import Column, Integer, ForeignKey, Numeric
 from banco_dados import Base
 
 class Itens_ComprasTabela(Base):
